@@ -1,0 +1,181 @@
+<!doctype html>
+<!-- «Smaschera la truffa» · l'app vera della serie 207 (18 nov 2026), costruita da Claude per @nicolotiravia.ai.
+     Funziona tutta nel telefono: niente server, niente dati inviati. Controlla un messaggio con regole chiare e spiegate, e ha un test di 10 messaggi.
+     Non è una garanzia: segnala i segnali più comuni delle truffe (fretta, link strani, richiesta di carta o codici, pagamenti insoliti). -->
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Smaschera la truffa</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root { --bg:#0b0b0c; --or:#f2683a; --wh:#f4efe8; --gr:#9a948d; --card:#f7f6f3; --ink:#17171a; --rd:#ff5a3c; --gn:#3ccf6e; --yl:#f2b33a; }
+* { box-sizing:border-box; margin:0; padding:0; }
+body { background:var(--bg); color:var(--wh); font-family:Inter, system-ui, sans-serif; min-height:100vh; }
+.wrap { max-width:560px; margin:0 auto; padding:28px 18px 60px; }
+.lab { display:inline-block; padding:8px 14px; border-radius:20px; background:var(--or); color:#121214; font:700 13px "JetBrains Mono", monospace; letter-spacing:.14em; }
+h1 { font:900 44px/1.02 Inter; letter-spacing:-2px; margin-top:16px; }
+h1 .hl { background:var(--or); color:#121214; border-radius:10px; padding:0 .12em; }
+.sub { color:var(--gr); font:600 17px/1.4 Inter; margin-top:12px; }
+.tabs { display:flex; gap:10px; margin-top:24px; }
+.tabs button { flex:1; height:52px; border-radius:26px; border:2px solid rgba(244,239,232,.18); background:transparent; color:var(--wh); font:800 17px Inter; cursor:pointer; }
+.tabs button.on { background:var(--or); color:#121214; border-color:var(--or); }
+.box { margin-top:18px; border-radius:24px; background:#18181b; border:2px solid rgba(244,239,232,.1); padding:18px; }
+textarea { width:100%; min-height:140px; border:0; border-radius:16px; background:#26262b; color:var(--wh); font:600 17px/1.4 Inter; padding:14px; resize:vertical; }
+textarea::placeholder { color:#77726c; }
+.ex { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+.ex button { border:0; border-radius:14px; background:#26262b; color:var(--wh); font:700 13px Inter; padding:9px 12px; cursor:pointer; }
+.go { width:100%; height:60px; margin-top:14px; border:0; border-radius:30px; background:var(--or); color:#121214; font:900 20px Inter; cursor:pointer; }
+.res { margin-top:18px; display:none; }
+.verdict { border-radius:22px; padding:18px 20px; color:#121214; }
+.verdict .k { font:700 13px "JetBrains Mono"; letter-spacing:.12em; } .verdict .v { font:900 30px/1.05 Inter; letter-spacing:-1px; margin-top:6px; }
+.meter { height:12px; border-radius:6px; background:rgba(0,0,0,.18); margin-top:12px; overflow:hidden; } .meter i { display:block; height:100%; background:#121214; }
+.flag { margin-top:12px; border-radius:18px; background:var(--card); color:var(--ink); padding:14px 16px; display:flex; gap:12px; }
+.flag .i { flex:none; font-size:22px; } .flag b { display:block; font:800 17px Inter; } .flag span { font:600 15px/1.35 Inter; color:#4a4640; }
+.note { color:var(--gr); font:600 13px/1.4 Inter; margin-top:14px; }
+.q { font:800 15px "JetBrains Mono"; color:var(--or); letter-spacing:.08em; }
+.msg { margin-top:12px; border-radius:20px; background:#26262b; padding:16px; font:600 18px/1.4 Inter; }
+.msg .from { color:var(--gr); font:700 13px Inter; margin-bottom:6px; }
+.ans { display:flex; gap:10px; margin-top:14px; } .ans button { flex:1; height:58px; border-radius:29px; border:0; font:900 19px Inter; cursor:pointer; }
+.ans .t { background:var(--rd); color:#fff; } .ans .s { background:var(--gn); color:#0d2a17; }
+.why { margin-top:14px; border-radius:18px; padding:14px 16px; font:600 16px/1.4 Inter; display:none; }
+.next { width:100%; height:54px; margin-top:12px; border:0; border-radius:27px; background:var(--wh); color:#121214; font:900 18px Inter; cursor:pointer; display:none; }
+.score { text-align:center; } .score .n { font:900 96px/1 Inter; letter-spacing:-4px; margin-top:8px; } .score .n span { color:var(--or); }
+.share { margin-top:14px; border-radius:18px; background:var(--card); color:var(--ink); padding:14px; font:700 16px/1.4 Inter; }
+.sig { text-align:center; color:var(--gr); font:700 13px "JetBrains Mono"; letter-spacing:.1em; margin-top:30px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <span class="lab">FATTA CON CLAUDE</span>
+  <h1>Smaschera la <span class="hl">truffa</span></h1>
+  <p class="sub">Incolla un SMS, una mail o un messaggio: ti dico quali segnali di truffa contiene, e perché.</p>
+  <div class="tabs"><button id="tA" class="on">Controlla</button><button id="tB">Fai il test</button></div>
+
+  <section id="A">
+    <div class="box">
+      <textarea id="txt" placeholder="Es. «Il tuo pacco è in giacenza. Conferma i dati qui: …»"></textarea>
+      <div class="ex" id="ex"></div>
+      <button class="go" id="go">Controlla</button>
+    </div>
+    <div class="res" id="res"></div>
+  </section>
+
+  <section id="B" style="display:none">
+    <div class="box" id="quiz"></div>
+  </section>
+
+  <p class="note">Funziona solo nel tuo telefono: il testo non viene mandato da nessuna parte. Non è una garanzia: nel dubbio non cliccare e contatta l'azienda dal suo sito o dalla sua app ufficiale.</p>
+  <div class="sig">@NICOLOTIRAVIA.AI</div>
+</div>
+
+<script>
+// ---------- i segnali: ogni regola ha un perché scritto in parole semplici ----------
+const RULES = [
+  { id: "link", w: 30, icon: "🔗", t: "C'è un link da aprire",
+    test: (s) => /(https?:\/\/|www\.|\b[a-z0-9-]+\.(info|xyz|top|shop|online|site|club|click|link|ru|cn|icu|live|buzz|cc)\b|bit\.ly|tinyurl|t\.co)/i.test(s),
+    why: "Banche, corrieri e poste non ti chiedono di sistemare le cose da un link in un SMS. Apri tu l'app o il sito ufficiale." },
+  { id: "dati", w: 30, icon: "💳", t: "Ti chiede carta, codici o password",
+    test: (s) => /(carta|cvv|codice|otp|pin|password|credenziali|iban|dati (della|di) pagamento|conferma i (tuoi )?dati|verifica i (tuoi )?dati|accedi)/i.test(s),
+    why: "Nessuna azienda seria ti chiede carta, codici o password via messaggio. Chi li chiede vuole usarli al posto tuo." },
+  { id: "fretta", w: 20, icon: "⏳", t: "Ti mette fretta",
+    test: (s) => /(entro (24|48) ?ore|entro oggi|subito|immediatamente|ultim[oaie]|scade|scadenza|urgente|bloccat[oa]|sospes[oa]|sar[àa] restituit|minuti)/i.test(s),
+    why: "La fretta serve a non farti pensare. Un problema vero si risolve anche domani, con calma." },
+  { id: "pacco", w: 15, icon: "📦", t: "Pacco «in giacenza» o spese di spedizione",
+    test: (s) => /(giacenza|pacco|spedizione|consegna|corriere|riconsegna|dogana)/i.test(s) && /(paga|pagare|€|euro|conferma|link|http|www)/i.test(s),
+    why: "È la truffa più diffusa: un finto corriere chiede pochi euro, ma in realtà vuole i dati della tua carta." },
+  { id: "premio", w: 20, icon: "🎁", t: "Premio, rimborso o regalo",
+    test: (s) => /(hai vinto|vincitore|premio|regalo|omaggio|rimborso|gratis|buono|bonus|selezionat[oa])/i.test(s),
+    why: "Nessuno ti regala soldi per messaggio. Il «premio» è l'esca per farti cliccare o pagare." },
+  { id: "pagam", w: 20, icon: "🏦", t: "Pagamento insolito",
+    test: (s) => /(bonifico|ricarica|postepay|gift ?card|buono amazon|criptovalut|bitcoin|usdt|western union)/i.test(s),
+    why: "Bonifici, ricariche e buoni non si possono annullare. Per questo li chiedono i truffatori." },
+  { id: "parente", w: 25, icon: "📱", t: "«Mamma, ho cambiato numero»",
+    test: (s) => /(mamma|papà|papa|nonna|nonno|figli[oa]).{0,40}(nuovo numero|cambiato numero|telefono rotto|questo è il mio)/i.test(s) || /(nuovo numero|cambiato numero|telefono (mi )?si è rotto)/i.test(s),
+    why: "Un finto figlio scrive da un numero nuovo e poi chiede soldi. Chiama il numero vecchio prima di fare qualsiasi cosa." },
+  { id: "banca", w: 15, icon: "🔒", t: "Accesso o conto «bloccato»",
+    test: (s) => /(conto|carta|account|profilo).{0,30}(bloccat|sospes|limitat|disattivat)|accesso (anomalo|sospetto|non autorizzato)/i.test(s),
+    why: "«Conto bloccato» o «accesso sospetto» servono a spaventarti. Controlla dall'app della tua banca, non dal messaggio." },
+  // 18 nov, parte 2 della serie: l'app non vedeva «Sono Marco della sua banca, la chiamo tra 5 minuti per un controllo» (nessun link) → amo numero 9
+  { id: "operatore", w: 45, icon: "☎️", t: "Finto operatore che ti chiama",
+    test: (s) => /(sono|ti chiamo|la chiamo|la contatto|ti contatto|chiamata).{0,60}(banca|poste|assistenza|operatore|ufficio sicurezza|antifrode|polizia|carabinieri)|(banca|antifrode|assistenza|ufficio sicurezza).{0,60}(ti chiam|la chiam|ti contatt|la contatt|richiam)/i.test(s),
+    why: "Banche e polizia non ti chiamano per «controlli» o «sicurezza». Attacca e richiama tu il numero ufficiale (per la banca: quello sul retro della carta)." },
+];
+const EX = [
+  ["📦 Pacco", "Il tuo pacco è in giacenza. Per la riconsegna paga 1,99 € entro 24 ore qui: consegne-pacco.info/x2"],
+  ["👩 Finto figlio", "Ciao mamma, ho cambiato numero perché il telefono si è rotto. Mi serve un bonifico urgente, ti spiego dopo"],
+  ["🏦 Banca", "Gentile cliente, rileviamo un accesso anomalo. Il tuo conto sarà bloccato: conferma i dati su www.verifica-conto.online"],
+  ["✅ Normale", "Ciao! Domani alle 20 ci vediamo da Luca per la pizza?"],
+];
+const $ = (id) => document.getElementById(id);
+function check(s) {
+  const hit = RULES.filter((r) => r.test(s)); let score = Math.min(100, hit.reduce((a, r) => a + r.w, 0));
+  if (hit.length >= 3) score = Math.max(score, 85);
+  return { hit, score };
+}
+function verdict(score) {
+  if (score >= 60) return { c: "var(--rd)", k: "SEGNALI DI TRUFFA", v: "Molto sospetto: non cliccare." };
+  if (score >= 25) return { c: "var(--yl)", k: "ATTENZIONE", v: "Qualcosa non torna: controlla." };
+  return { c: "var(--gn)", k: "NESSUN SEGNALE CHIARO", v: "Non vedo segnali tipici." };
+}
+function show(s) {
+  const { hit, score } = check(s), v = verdict(score), r = $("res");
+  r.innerHTML = `<div class="verdict" style="background:${v.c}"><div class="k">${v.k} · ${score}/100</div><div class="v">${v.v}</div><div class="meter"><i style="width:${score}%"></i></div></div>` +
+    hit.map((h) => `<div class="flag"><div class="i">${h.icon}</div><div><b>${h.t}</b><span>${h.why}</span></div></div>`).join("") +
+    (hit.length ? "" : `<div class="flag"><div class="i">💡</div><div><b>Nel dubbio</b><span>Anche senza segnali, se un messaggio ti chiede soldi o dati, verifica sempre dal sito o dall'app ufficiale.</span></div></div>`);
+  r.style.display = "block"; r.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+$("ex").innerHTML = EX.map(([n], i) => `<button data-i="${i}">${n}</button>`).join("");
+$("ex").onclick = (e) => { const i = e.target.dataset.i; if (i !== undefined) { $("txt").value = EX[i][1]; show(EX[i][1]); } };
+$("go").onclick = () => { const s = $("txt").value.trim(); if (s) show(s); };
+
+// ---------- il test: 10 messaggi, truffa o no ----------
+const Q = [
+  ["Consegne", "Il tuo pacco è in giacenza. Paga 1,99 € per la riconsegna: ritiro-pacchi.info/a7", 1, "Truffa: un corriere vero non chiede pagamenti con un link in un SMS."],
+  ["Mario", "Ci vediamo alle 18 davanti al bar?", 0, "Normale: nessun link, nessun soldo, nessuna fretta."],
+  ["+39 351…", "Ciao papà, questo è il mio nuovo numero. Mi fai un bonifico? Ti spiego dopo", 1, "Truffa: il «figlio con il numero nuovo» che chiede un bonifico."],
+  ["Banca", "Accesso anomalo rilevato. Il conto sarà sospeso entro 24 ore: verifica su www.sicurezza-conto.top", 1, "Truffa: fretta + link strano + conto «sospeso»."],
+  ["Farmacia", "La sua ricetta è pronta. Può ritirarla da domani in farmacia.", 0, "Normale: ti dà un'informazione, non ti chiede niente."],
+  ["Premi", "Hai vinto un buono da 500 €! Sei stato selezionato: riscatta qui bit.ly/premio500", 1, "Truffa: nessuno ti regala 500 € per SMS."],
+  ["Corriere", "Il suo ordine arriverà domani tra le 9 e le 13.", 0, "Normale: un avviso, senza link da aprire e senza pagamenti."],
+  ["Assistenza", "Il tuo account sarà disattivato. Accedi con la tua password qui per confermare: acc-verifica.online", 1, "Truffa: nessuno ti chiede la password con un link."],
+  ["Palestra", "Da lunedì la sala apre alle 7. Buon allenamento!", 0, "Normale: informazione, niente richieste."],
+  ["Rimborsi", "Ti spetta un rimborso fiscale di 248 €. Inserisci i dati della carta per riceverlo", 1, "Truffa: per ricevere un rimborso non si danno i dati della carta."],
+];
+let qi = 0, ok = 0;
+function quiz() {
+  const box = $("quiz");
+  if (qi >= Q.length) {
+    box.innerHTML = `<div class="score"><div class="q">IL TUO RISULTATO</div><div class="n">${ok}<span>/10</span></div>
+      <div class="share">${ok >= 9 ? "Occhio di falco: non ti fregano facilmente." : ok >= 6 ? "Bene, ma qualcuna ti sarebbe sfuggita." : "Attenzione: i truffatori puntano proprio su questo."}<br><br>Mandalo a qualcuno: «Ho fatto ${ok}/10 al test delle truffe di @nicolotiravia.ai. Tu?»</div>
+      <button class="go" id="share">Manda il tuo punteggio</button>
+      <button class="go" id="again" style="background:transparent;color:var(--wh);border:2px solid rgba(244,239,232,.25)">Rifai il test</button></div>`;
+    $("again").onclick = () => { qi = 0; ok = 0; quiz(); };
+    // 24 nov: pulsante vero per mandare il punteggio (il 209 dice «hai il punteggio da mandare agli amici»)
+    $("share").onclick = async () => {
+      const text = `Ho fatto ${ok}/10 al test delle truffe di @nicolotiravia.ai. Tu quanto fai?`;
+      const url = location.href.split("#")[0];
+      try {
+        if (navigator.share) { await navigator.share({ title: "Smaschera la truffa", text, url }); return; }
+        await navigator.clipboard.writeText(text + " " + url); $("share").textContent = "Copiato: incollalo in chat";
+      } catch (e) { /* l'utente ha chiuso la finestra di condivisione */ }
+    };
+    return;
+  }
+  const [from, m, truffa, why] = Q[qi];
+  box.innerHTML = `<div class="q">MESSAGGIO ${qi + 1} DI 10</div><div class="msg"><div class="from">${from}</div>${m}</div>
+    <div class="ans"><button class="t" data-a="1">Truffa</button><button class="s" data-a="0">Normale</button></div>
+    <div class="why" id="why"></div><button class="next" id="nx">Avanti →</button>`;
+  box.querySelector(".ans").onclick = (e) => {
+    const a = e.target.dataset.a; if (a === undefined || $("why").style.display === "block") return;
+    const right = +a === truffa; if (right) ok++;
+    const w = $("why"); w.style.display = "block"; w.style.background = right ? "#1f3d29" : "#4a1c14";
+    w.innerHTML = (right ? "✅ Giusto. " : "❌ No. ") + why; $("nx").style.display = "block";
+  };
+  $("nx").onclick = () => { qi++; quiz(); };
+}
+$("tA").onclick = () => { $("A").style.display = ""; $("B").style.display = "none"; $("tA").classList.add("on"); $("tB").classList.remove("on"); };
+$("tB").onclick = () => { $("B").style.display = ""; $("A").style.display = "none"; $("tB").classList.add("on"); $("tA").classList.remove("on"); quiz(); };
+</script>
+</body>
+</html>
