@@ -1,0 +1,17 @@
+<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HyperFrames: Claude monta i video · @nicolotiravia.ai</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;800;900&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet"><style>:root{--bg:#0b0b0c;--or:#f2683a;--wh:#f4efe8;--gr:#9a948d;--card:#18181b}
+*{box-sizing:border-box;margin:0;padding:0}body{background:var(--bg);color:var(--wh);font-family:Inter,system-ui,sans-serif}
+.wrap{max-width:560px;margin:0 auto;padding:28px 18px 60px}.lab{display:inline-block;padding:8px 14px;border-radius:20px;background:var(--or);color:#121214;font:700 13px "JetBrains Mono",monospace;letter-spacing:.14em}
+h1{font:900 40px/1.05 Inter;letter-spacing:-1.5px;margin-top:16px}.sub{color:var(--gr);font:600 17px/1.45 Inter;margin-top:12px}
+.step{margin-top:16px;border-radius:22px;background:var(--card);border:2px solid rgba(244,239,232,.1);padding:18px}
+.step .n{font:700 13px "JetBrains Mono";color:var(--or);letter-spacing:.12em}.step h2{font:800 21px/1.2 Inter;margin-top:6px}
+.step p{font:500 16px/1.5 Inter;margin-top:8px;color:#d9d4cd}.step p b{color:var(--wh)}a{color:var(--or)}
+code{font:600 14px "JetBrains Mono";background:#26262b;padding:2px 6px;border-radius:6px}
+.copy{margin-top:12px;border-radius:16px;background:#26262b;padding:14px;font:600 16px/1.45 Inter;white-space:pre-wrap}
+button{margin-top:10px;width:100%;height:52px;border:0;border-radius:26px;background:var(--or);color:#121214;font:900 18px Inter;cursor:pointer}
+.foot{margin-top:28px;color:var(--gr);font:600 14px/1.5 Inter;text-align:center}.foot b{color:var(--wh)}</style></head>
+<body><div class="wrap"><span class="lab">COMMENTA VIDEO</span><h1>HyperFrames: Claude monta i video</h1><p class="sub">Il progetto gratuito (quasi 90.000 stelle su GitHub) con cui monto i miei reel.</p><div class="step"><div class="n">01</div><h2>Il progetto</h2><p>È gratis e open source (licenza Apache-2.0): <a href="https://github.com/heygen-com/hyperframes">github.com/heygen-com/hyperframes</a></p></div><div class="step"><div class="n">02</div><h2>Cosa ti serve</h2><p>Un computer con Node.js installato e Claude Code (o un altro assistente che scrive codice).</p></div><div class="step"><div class="n">03</div><h2>Chiedi il video a parole</h2><p>Apri una cartella vuota e scrivi a Claude: <b>«Usa HyperFrames per farmi un video verticale di 15 secondi su…»</b>. Lui scrive scene, animazioni e tempi.</p></div><div class="step"><div class="n">04</div><h2>Guardalo e correggilo</h2><p><code>npx hyperframes preview</code> lo apre nel browser. Se qualcosa non ti piace lo dici a parole: «più grande», «più veloce».</p></div><div class="step"><div class="n">05</div><h2>Esporta l'MP4</h2><p><code>npx hyperframes render</code> crea il file pronto da pubblicare.</p></div>
+<p class="foot">Fatto da <b>@nicolotiravia.ai</b> con Claude.<br>Seguimi su Instagram: ogni settimana un trucco così.</p></div>
+<script>function cp(i){const t=document.getElementById('c'+i).innerText;const b=event.target;(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>{b.textContent='Copiato ✓';setTimeout(()=>b.textContent='Copia',1500)}).catch(()=>{const r=document.createRange();r.selectNodeContents(document.getElementById('c'+i));getSelection().removeAllRanges();getSelection().addRange(r);b.textContent='Selezionato: copia a mano'})}</script>
+</body></html>
